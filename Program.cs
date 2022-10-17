@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using AdventOfCode2022.Infrastructure;
+
 IDay day;
 
 try
@@ -38,10 +40,10 @@ static void PrintPuzzle(string name, Func<string?> puzzleFunc)
         string? result = puzzleFunc.Invoke();
         if (result is not null)
         {
-            Console.WriteLine("Result: {0}", result);
+            WriteValue("Result", result, valueForegroundColor: ConsoleColor.Blue);
         }
         sw.Stop();
-        Console.WriteLine("Time elapsed: {0:N0} ms.", sw.ElapsedMilliseconds);
+        WriteValue("Time elapsed", sw.ElapsedMilliseconds.ToString("N0"), "ms.");
     }
     catch (NotImplementedException)
     {
@@ -56,13 +58,46 @@ static void ReadInput(IDay day)
     Stopwatch sw = Stopwatch.StartNew();
     day.ReadInput();
     sw.Stop();
-    Console.WriteLine("Time elapsed: {0:N0} ms.", sw.ElapsedMilliseconds);
+
+    WriteValue("Time elapsed", sw.ElapsedMilliseconds.ToString("N0"), "ms.");
 }
 
 static void WriteHeader(string name)
 {
+    var fg = Console.ForegroundColor;
+    var bg = Console.BackgroundColor;
+
     Console.WriteLine();
     Console.WriteLine("+-{0}-+", new string('-', name.Length));
     Console.WriteLine("| {0} |", name);
     Console.WriteLine("+-{0}-+", new string('-', name.Length));
+}
+
+static void WriteValue(string key, object value, string? unit = null, ConsoleColor valueForegroundColor = ConsoleColor.DarkGreen)
+{
+    var fg = Console.ForegroundColor;
+    var bg = Console.BackgroundColor;
+    try
+    {
+        Console.Write(key);
+        Console.Write(": ");
+
+        Console.ForegroundColor = valueForegroundColor;
+        Console.Write(value);
+        Console.ForegroundColor = fg;
+
+        if (unit is not null)
+        {
+            Console.Write(" ");
+            Console.Write(unit);
+        }
+
+        Console.WriteLine();
+    }
+    finally
+    {
+
+        Console.ForegroundColor = fg;
+        Console.BackgroundColor = bg;
+    }
 }

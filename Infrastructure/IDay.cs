@@ -1,8 +1,11 @@
-internal interface IDay
+namespace AdventOfCode2022.Infrastructure
 {
-    int DayId { get; }
-    string Name { get; }
-    string? FirstPart();
-    void ReadInput();
-    string? SecondPart();
+    internal interface IDay
+    {
+        int DayId { get; }
+        string Name { get; }
+        string? FirstPart();
+        void ReadInput();
+        string? SecondPart();
+    }
 }
