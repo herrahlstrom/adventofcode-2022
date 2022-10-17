@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using AdventOfCode2022.Infrastructure;
+
 IDay day;
 
 try
