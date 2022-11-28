@@ -1,33 +1,28 @@
-﻿using System.Diagnostics;
-using AdventOfCode2022.Infrastructure;
-
-IDay day;
+﻿using AdventOfCode2022.Infrastructure;
+using System.Diagnostics;
 
 try
 {
-    day = GetPuzzle(args);
+    IDay day = args.Length >= 1 && int.TryParse(args[0], out int numArg)
+        ? GetPuzzles().Where(x => x.Day == numArg).First()
+        : GetPuzzles().OrderBy(x => x.Day).Last();
+
+    Console.WriteLine("{0,2} | {1}", day.Day, day.Name);
+    ReadInput(day);
+    PrintPuzzle("First puzzle", day.FirstPart);
+    PrintPuzzle("Second puzzle", day.SecondPart);
 }
 catch (Exception ex)
 {
     Console.Error.WriteLine("{0}: {1}", ex.GetType(), ex.Message);
-    return;
 }
 
-Console.WriteLine("{0,2} | {1}", day.DayId, day.Name);
-ReadInput(day);
-PrintPuzzle("First puzzle", day.FirstPart);
-PrintPuzzle("Second puzzle", day.SecondPart);
-
-static IDay GetPuzzle(string[] args)
+static IEnumerable<IDay> GetPuzzles()
 {
-    IEnumerable<IDay> days = typeof(IDay).Assembly.GetTypes()
+    return typeof(IDay).Assembly.GetTypes()
         .Where(t => t.IsClass)
         .Where(p => typeof(IDay).IsAssignableFrom(p))
         .Select(Activator.CreateInstance).OfType<IDay>();
-
-    return args.Length >= 1 && int.TryParse(args[0], out int dayId)
-        ? days.FirstOrDefault(x => x.DayId == dayId) ?? throw new ArgumentOutOfRangeException($"Day id {dayId} does not exists")
-        : days.MaxBy(x => x.DayId) ?? throw new InvalidOperationException($"No day puzzle was found");
 }
 
 static void PrintPuzzle(string name, Func<string?> puzzleFunc)

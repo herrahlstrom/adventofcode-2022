@@ -2,7 +2,7 @@ namespace AdventOfCode2022.Infrastructure
 {
     internal interface IDay
     {
-        int DayId { get; }
+        int Day { get; }
         string Name { get; }
         string? FirstPart();
         void ReadInput();
