@@ -1,4 +1,4 @@
-﻿using AdventOfCode2022.Infrastructure;
+﻿using AdventOfCode2022;
 using System.Diagnostics;
 
 try
