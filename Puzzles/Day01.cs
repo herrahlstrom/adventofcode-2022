@@ -1,66 +1,64 @@
-﻿namespace AdventOfCode2022.Puzzles;
+﻿using System.Reflection.Metadata.Ecma335;
+
+namespace AdventOfCode2022.Puzzles;
 
 public class Day01 : IDay
 {
-    private readonly List<Elf> m_elfs = new();
+   private readonly List<Elf> m_elfs = new();
 
-    public string? FirstPart()
-    {
-        var maxCalories = m_elfs.Max(x => x.TotalCalories);
-        return $"{maxCalories}";
-    }
+   public int Day => 1;
 
-    public void ReadInput()
-    {
-        using var stream = File.OpenRead("input/01.txt");
-        using var reader = new StreamReader(stream);
+   public string Name => "Calorie Counting";
 
-        Elf? currentElf = null;
-        while (reader.ReadLine() is string line)
-        {
-            if (line.Length == 0)
-            {
-                currentElf = null;
-            }
-            else if (int.TryParse(line, out int calories))
-            {
-                if (currentElf is null)
-                {
-                    currentElf = new();
-                    m_elfs.Add(currentElf);
-                }
+   public string? FirstPart()
+   {
+      var maxCalories = m_elfs.Max(x => x.TotalCalories);
+      return $"{maxCalories}";
+   }
 
-                currentElf.AddCalories(calories);
-            }
-            else
-            {
-                throw new InvalidDataException("Invalid input line: " + line);
-            }
-        }
-    }
+   public void ReadInput()
+   {
+      Elf? currentElf = null;
+      InputReader.ReadLines("input/01.txt", OnLine);
 
-    public string? SecondPart()
-    {
-        var sumCaloriesTop3Elfs = m_elfs
-            .OrderByDescending(x => x.TotalCalories)
-            .Take(3).Sum(x => x.TotalCalories);
-        return $"{sumCaloriesTop3Elfs}";
-    }
+      void OnLine(string line)
+      {
+         if (line.Length == 0)
+         {
+            currentElf = null;
+            return;
+         }
 
-    public int Day => 1;
+         if (currentElf is null)
+         {
+            currentElf = new();
+            m_elfs.Add(currentElf);
+         }
 
-    public string Name => "Calorie Counting";
+         int calories = int.Parse(line);
+         currentElf.AddCalories(calories);
+      }
+   }
 
-    class Elf
-    {
-        private readonly List<int> m_calories = new();
+   public string? SecondPart()
+   {
+      var sumCaloriesTop3Elfs = m_elfs
+          .OrderByDescending(x => x.TotalCalories)
+          .Take(3)
+          .Sum(x => x.TotalCalories);
+      return $"{sumCaloriesTop3Elfs}";
+   }
 
-        public void AddCalories(int value)
-        {
-            m_calories.Add(value);
-            TotalCalories = m_calories.Sum();
-        }
+   class Elf
+   {
+      private readonly List<int> m_calories = new();
 
-        public int TotalCalories { get; private set; } = 0;
-    }
+      public int TotalCalories { get; private set; } = 0;
+
+      public void AddCalories(int value)
+      {
+         m_calories.Add(value);
+         TotalCalories = m_calories.Sum();
+      }
+   }
 }
