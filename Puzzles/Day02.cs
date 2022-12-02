@@ -6,8 +6,7 @@ namespace AdventOfCode2022.Puzzles;
 
 internal class Day02 : IDay
 {
-    private List<(Shape opponent, Shape you)> m_strategyGuideFirstPart = new();
-    private List<(Shape opponent, RoundResult result)> m_strategyGuideSecondPart = new();
+    private List<(Shape opponent, char unknown)> m_strategyGuide = new();
 
     enum RoundResult { Loss, Draw, Win }
     enum Shape { Rock, Paper, Scissors }
@@ -20,9 +19,17 @@ internal class Day02 : IDay
     {
         int points = 0;
 
-        foreach (var round in m_strategyGuideFirstPart)
+        foreach (var round in m_strategyGuide)
         {
-            var roundResult = round switch
+            var you = round.unknown switch
+            {
+                'X' => Shape.Rock,
+                'Y' => Shape.Paper,
+                'Z' => Shape.Scissors,
+                _ => throw new UnreachableException()
+            };
+
+            var roundResult = (round.opponent, you) switch
             {
                 (Shape.Rock, Shape.Rock) => RoundResult.Draw,
                 (Shape.Rock, Shape.Paper) => RoundResult.Win,
@@ -36,7 +43,7 @@ internal class Day02 : IDay
                 _ => throw new UnreachableException()
             };
 
-            points += GetRountPoints(roundResult, round.you);
+            points += GetRountPoints(roundResult, you);
         }
         return $"{points}";
     }
@@ -56,21 +63,7 @@ internal class Day02 : IDay
                 _ => throw new UnreachableException()
             };
 
-            m_strategyGuideFirstPart.Add(new(opponent, line[2] switch
-            {
-                'X' => Shape.Rock,
-                'Y' => Shape.Paper,
-                'Z' => Shape.Scissors,
-                _ => throw new UnreachableException()
-            }));
-
-            m_strategyGuideSecondPart.Add(new(opponent, line[2] switch
-            {
-                'X' => RoundResult.Loss,
-                'Y' => RoundResult.Draw,
-                'Z' => RoundResult.Win,
-                _ => throw new UnreachableException()
-            }));
+            m_strategyGuide.Add(new(opponent, line[2]));
         }
     }
 
@@ -78,9 +71,17 @@ internal class Day02 : IDay
     {
         int points = 0;
 
-        foreach (var round in m_strategyGuideSecondPart)
+        foreach (var round in m_strategyGuide)
         {
-            var you = round switch
+            var expectedResult = round.unknown switch
+            {
+                'X' => RoundResult.Loss,
+                'Y' => RoundResult.Draw,
+                'Z' => RoundResult.Win,
+                _ => throw new UnreachableException()
+            };
+
+            var you = (round.opponent, expectedResult) switch
             {
                 (Shape.Rock, RoundResult.Loss) => Shape.Scissors,
                 (Shape.Rock, RoundResult.Draw) => Shape.Rock,
@@ -94,7 +95,7 @@ internal class Day02 : IDay
                 _ => throw new UnreachableException()
             };
 
-            points += GetRountPoints(round.result, you);
+            points += GetRountPoints(expectedResult, you);
         }
         return $"{points}";
     }
