@@ -1,4 +1,4 @@
-namespace AdventOfCode2022.Infrastructure
+namespace AdventOfCode2022
 {
     internal interface IDay
     {
