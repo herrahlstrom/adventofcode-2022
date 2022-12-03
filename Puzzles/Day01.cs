@@ -7,7 +7,7 @@ public class Day01 : IDay
 
     public string Name => "Calorie Counting";
 
-    public string? FirstPart()
+    public long FirstPart()
     {
         int maxCalories = 0;
 
@@ -24,10 +24,10 @@ public class Day01 : IDay
         }
         maxCalories = calories > maxCalories ? calories : maxCalories;
 
-        return $"{maxCalories}";
+        return maxCalories;
     }
 
-    public string? SecondPart()
+    public long SecondPart()
     {
         List<int> allCalories = new();
 
@@ -52,6 +52,6 @@ public class Day01 : IDay
             .Take(3)
             .Sum();
 
-        return $"{sumCaloriesTop3Elfs}";
+        return sumCaloriesTop3Elfs;
     }
 }

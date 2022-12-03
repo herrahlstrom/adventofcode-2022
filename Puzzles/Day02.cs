@@ -11,7 +11,7 @@ internal class Day02 : IDay
 
     public string Name => "Rock Paper Scissors";
 
-    public string? FirstPart()
+    public long FirstPart()
     {
         int points = 0;
 
@@ -51,10 +51,10 @@ internal class Day02 : IDay
 
             points += (int)roundResult + (int)round.You;
         }
-        return $"{points}";
+        return points;
     }
 
-    public string? SecondPart()
+    public long SecondPart()
     {
         int points = 0;
 
@@ -94,6 +94,6 @@ internal class Day02 : IDay
 
             points += (int)round.ExpectedResult + (int)you;
         }
-        return $"{points}";
+        return points;
     }
 }

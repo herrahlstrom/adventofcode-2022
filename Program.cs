@@ -1,67 +1,27 @@
 ﻿using AdventOfCode2022;
+using ConsoleTables;
 using System.Diagnostics;
 
-try
+var resultTable = new ConsoleTable("   PUZZLE", "FIRST".PadLeft(10), "SECOND".PadLeft(10), "ELAPSED".PadLeft(17));
+
+foreach (IDay day in GetPuzzles(args.FirstOrDefault()))
 {
-    Console.WriteLine("                               +----------------+----------------+------------+");
-    Console.WriteLine("                               |          FIRST |         SECOND |    ELAPSED |");
-    Console.WriteLine("+------------------------------+----------------+----------------+------------+");
+    Stopwatch sw1 = Stopwatch.StartNew();
+    long firstResult = day.FirstPart();
+    sw1.Stop();
 
-    long totalElapsedMilliseconds = 0;
-    foreach (IDay day in GetPuzzles(args.FirstOrDefault()))
-    {
-        string? firstResult;
-        Stopwatch sw1 = Stopwatch.StartNew();
-        try
-        {
-            firstResult = day.FirstPart();
-        }
-        catch (NotImplementedException) { firstResult = null; }
-        finally
-        {
-            sw1.Stop();
-        }
+    Stopwatch sw2 = Stopwatch.StartNew();
+    long secondResult = day.SecondPart();
+    sw2.Stop();
 
-        string? secondResult;
-        Stopwatch sw2 = Stopwatch.StartNew();
-        try
-        {
-            secondResult = day.SecondPart();
-        }
-        catch (NotImplementedException) { secondResult = null; }
-        finally
-        {
-            sw2.Stop();
-        }
-
-        var dayElapsedMilliseconds = sw1.ElapsedMilliseconds + sw2.ElapsedMilliseconds;
-        var dayElapsedTicks = sw1.ElapsedTicks + sw2.ElapsedTicks;
-
-        totalElapsedMilliseconds += dayElapsedMilliseconds;
-
-        Console.WriteLine("| {0:00}                           | {1,14} | {2,14} |            |", 
-            day.Day, 
-            firstResult, 
-            secondResult);
-       
-        Console.WriteLine("| {0,-28} | {1,14:P0} | {2,14:P0} | {3,7} ms |",
-            day.Name, 
-            (float)sw1.ElapsedTicks / dayElapsedTicks,
-            (float)sw2.ElapsedTicks / dayElapsedTicks, 
-            dayElapsedMilliseconds);
-        Console.WriteLine("+------------------------------+----------------+----------------+------------+");
+    resultTable.AddRow(
+        $"{day.Day:00} {day.Name}",
+        $"{firstResult,10}",
+        $"{secondResult,10}",
+        $"{sw1.ElapsedMilliseconds,4} ms + {sw2.ElapsedMilliseconds,4} ms");
     }
 
-    Console.WriteLine("                                                                 | {0,7} ms |", totalElapsedMilliseconds);
-    Console.WriteLine("                                                                 +------------+");
-
-    Console.WriteLine();
-
-}
-catch (Exception ex)
-{
-    Console.Error.WriteLine("{0}: {1}", ex.GetType(), ex.Message);
-}
+resultTable.Write();
 
 static IEnumerable<IDay> GetPuzzles(string? arg)
 {

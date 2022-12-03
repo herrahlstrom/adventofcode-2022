@@ -19,7 +19,7 @@ internal class Day03 : IDay
         };
     }
 
-    public string? FirstPart()
+    public long FirstPart()
     {
         int result = 0;
         foreach (var racksack in File.ReadLines($"input/{Day:00}.txt"))
@@ -36,10 +36,10 @@ internal class Day03 : IDay
                 }
             }
         }
-        return $"{result}";
+        return result;
     }
 
-    public string? SecondPart()
+    public long SecondPart()
     {
         int result = 0;
 
@@ -57,6 +57,6 @@ internal class Day03 : IDay
                 }
             }
         }
-        return $"{result}";
+        return result;
     }
 }
