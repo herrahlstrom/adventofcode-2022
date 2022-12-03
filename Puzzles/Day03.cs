@@ -59,7 +59,4 @@ internal class Day03 : IDay
         }
         return $"{result}";
     }
-
-    [Obsolete]
-    public void ReadInput() { }
 }

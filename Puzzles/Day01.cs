@@ -27,11 +27,6 @@ public class Day01 : IDay
         return $"{maxCalories}";
     }
 
-    [Obsolete]
-    public void ReadInput()
-    {
-    }
-
     public string? SecondPart()
     {
         List<int> allCalories = new();

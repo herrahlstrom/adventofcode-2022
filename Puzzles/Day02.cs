@@ -54,9 +54,6 @@ internal class Day02 : IDay
         return $"{points}";
     }
 
-    [Obsolete]
-    public void ReadInput() { }
-
     public string? SecondPart()
     {
         int points = 0;
