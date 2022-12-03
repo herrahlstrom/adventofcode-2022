@@ -4,8 +4,6 @@ namespace AdventOfCode2022.Puzzles;
 
 internal class Day03 : IDay
 {
-    private List<string> m_rucksacks = new();
-
     public int Day => 3;
 
     public string Name => "Rucksack Reorganization";
@@ -24,14 +22,15 @@ internal class Day03 : IDay
     public string? FirstPart()
     {
         int result = 0;
-        foreach (var racksack in m_rucksacks)
+        foreach (var racksack in InputReader.ReadLines($"input/{Day:00}.txt"))
         {
             int compartmentSize = racksack.Length / 2;
 
             HashSet<char> commonCharacters = new();
             for (int i = 0; i < compartmentSize; i++)
             {
-                if ((racksack.IndexOf(racksack[i], compartmentSize) > 0) && commonCharacters.Add(racksack[i]))
+                if (racksack.IndexOf(racksack[i], compartmentSize) > 0 &&
+                    commonCharacters.Add(racksack[i]))
                 {
                     result += GetPrio(racksack[i]);
                 }
@@ -40,29 +39,19 @@ internal class Day03 : IDay
         return $"{result}";
     }
 
-    public void ReadInput()
-    {
-        InputReader.ReadLines("input/03.txt", line =>
-        {
-            m_rucksacks.Add(line);
-        });
-    }
-
     public string? SecondPart()
     {
         int result = 0;
-        for (int i = 0; i < m_rucksacks.Count; i += 3)
+
+        foreach (var group in InputReader.ReadLines($"input/{Day:00}.txt").Chunk(3))
         {
-            var rs1 = m_rucksacks[i];
-            var rs2 = m_rucksacks[i + 1];
-            var rs3 = m_rucksacks[i + 2];
             HashSet<char> commonCharacters = new();
 
-            for (int j = 0; j < rs1.Length; j++)
+            foreach (char c in group[0])
             {
-                char c = rs1[j];
-
-                if (rs2.Contains(c) && rs3.Contains(c) && commonCharacters.Add(c))
+                if (group[1].Contains(c) &&
+                    group[2].Contains(c) &&
+                    commonCharacters.Add(c))
                 {
                     result += GetPrio(c);
                 }
@@ -70,4 +59,7 @@ internal class Day03 : IDay
         }
         return $"{result}";
     }
+
+    [Obsolete]
+    public void ReadInput() { }
 }
