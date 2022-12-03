@@ -22,7 +22,7 @@ internal class Day03 : IDay
     public string? FirstPart()
     {
         int result = 0;
-        foreach (var racksack in InputReader.ReadLines($"input/{Day:00}.txt"))
+        foreach (var racksack in File.ReadLines($"input/{Day:00}.txt"))
         {
             int compartmentSize = racksack.Length / 2;
 
@@ -43,7 +43,7 @@ internal class Day03 : IDay
     {
         int result = 0;
 
-        foreach (var group in InputReader.ReadLines($"input/{Day:00}.txt").Chunk(3))
+        foreach (var group in File.ReadLines($"input/{Day:00}.txt").Chunk(3))
         {
             HashSet<char> commonCharacters = new();
 

@@ -15,7 +15,7 @@ internal class Day02 : IDay
     {
         int points = 0;
 
-        var strategyGuide = InputReader.ReadLines($"input/{Day:00}.txt").Select(line => new
+        var strategyGuide = File.ReadLines($"input/{Day:00}.txt").Select(line => new
         {
             Opponent = line[0] switch
             {
@@ -58,7 +58,7 @@ internal class Day02 : IDay
     {
         int points = 0;
 
-        var strategyGuide = InputReader.ReadLines($"input/{Day:00}.txt").Select(line => new
+        var strategyGuide = File.ReadLines($"input/{Day:00}.txt").Select(line => new
         {
             Opponent = line[0] switch
             {

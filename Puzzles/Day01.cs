@@ -12,7 +12,7 @@ public class Day01 : IDay
         int maxCalories = 0;
 
         int calories = 0;
-        foreach (var line in InputReader.ReadLines($"input/{Day:00}.txt"))
+        foreach (var line in File.ReadLines($"input/{Day:00}.txt"))
         {
             if (line == "")
             {
@@ -32,7 +32,7 @@ public class Day01 : IDay
         List<int> allCalories = new();
 
         int calories = 0;
-        foreach (var line in InputReader.ReadLines($"input/{Day:00}.txt"))
+        foreach (var line in File.ReadLines($"input/{Day:00}.txt"))
         {
             if (line == "")
             {
