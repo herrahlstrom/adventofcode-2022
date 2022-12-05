@@ -2,7 +2,7 @@
 using ConsoleTables;
 using System.Diagnostics;
 
-var resultTable = new ConsoleTable("   PUZZLE", "FIRST".PadLeft(10), "SECOND".PadLeft(10), "ELAPSED".PadLeft(17));
+var resultTable = new ConsoleTable("PUZZLE", "FIRST", "SECOND", "ELAPSED");
 
 foreach (IDay day in GetPuzzles(args.FirstOrDefault()))
 {
@@ -15,10 +15,10 @@ foreach (IDay day in GetPuzzles(args.FirstOrDefault()))
     sw2.Stop();
 
     resultTable.AddRow(
-        $"{day.Day:00} {day.Name}",
+        $"{day.Day,2} {day.Name}",
         $"{firstResult,10}",
         $"{secondResult,10}",
-        $"{sw1.ElapsedMilliseconds,4} ms + {sw2.ElapsedMilliseconds,4} ms");
+        $"{sw1.ElapsedMilliseconds} ms + {sw2.ElapsedMilliseconds} ms");
     }
 
 resultTable.Write();
