@@ -6,20 +6,17 @@ var resultTable = new ConsoleTable("PUZZLE", "FIRST", "SECOND", "ELAPSED");
 
 foreach (IDay day in GetPuzzles(args.FirstOrDefault()))
 {
-    Stopwatch sw1 = Stopwatch.StartNew();
+    Stopwatch sw = Stopwatch.StartNew();
     object firstResult = day.FirstPart();
-    sw1.Stop();
-
-    Stopwatch sw2 = Stopwatch.StartNew();
     object secondResult = day.SecondPart();
-    sw2.Stop();
+    sw.Stop();
 
     resultTable.AddRow(
         $"{day.Day,2} {day.Name}",
         $"{firstResult,10}",
         $"{secondResult,10}",
-        $"{sw1.ElapsedMilliseconds} ms + {sw2.ElapsedMilliseconds} ms");
-    }
+        $"{sw.ElapsedMilliseconds,4} ms");
+}
 
 resultTable.Write();
 
