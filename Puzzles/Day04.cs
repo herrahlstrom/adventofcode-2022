@@ -8,7 +8,7 @@ internal class Day04 : IDay
 
     public string Name => "Camp Cleanup";
 
-    public long FirstPart()
+    public object FirstPart()
     {
         int result = 0;
         foreach (var line in File.ReadLines($"input/{Day:00}.txt"))
@@ -26,7 +26,7 @@ internal class Day04 : IDay
         return result;
     }
 
-    public long SecondPart()
+    public object SecondPart()
     {
         int result = 0;
         foreach (var line in File.ReadLines($"input/{Day:00}.txt"))

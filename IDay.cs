@@ -4,6 +4,6 @@ internal interface IDay
 {
     int Day { get; }
     string Name { get; }
-    long FirstPart();
-    long SecondPart();
+    object FirstPart();
+    object SecondPart();
 }

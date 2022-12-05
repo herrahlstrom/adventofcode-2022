@@ -11,7 +11,7 @@ internal class Day02 : IDay
 
     public string Name => "Rock Paper Scissors";
 
-    public long FirstPart()
+    public object FirstPart()
     {
         int points = 0;
 
@@ -54,7 +54,7 @@ internal class Day02 : IDay
         return points;
     }
 
-    public long SecondPart()
+    public object SecondPart()
     {
         int points = 0;
 

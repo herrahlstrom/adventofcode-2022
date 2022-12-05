@@ -7,7 +7,7 @@ public class Day01 : IDay
 
     public string Name => "Calorie Counting";
 
-    public long FirstPart()
+    public object FirstPart()
     {
         int maxCalories = 0;
 
@@ -27,7 +27,7 @@ public class Day01 : IDay
         return maxCalories;
     }
 
-    public long SecondPart()
+    public object SecondPart()
     {
         List<int> allCalories = new();
 

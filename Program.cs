@@ -7,11 +7,11 @@ var resultTable = new ConsoleTable("   PUZZLE", "FIRST".PadLeft(10), "SECOND".Pa
 foreach (IDay day in GetPuzzles(args.FirstOrDefault()))
 {
     Stopwatch sw1 = Stopwatch.StartNew();
-    long firstResult = day.FirstPart();
+    object firstResult = day.FirstPart();
     sw1.Stop();
 
     Stopwatch sw2 = Stopwatch.StartNew();
-    long secondResult = day.SecondPart();
+    object secondResult = day.SecondPart();
     sw2.Stop();
 
     resultTable.AddRow(
