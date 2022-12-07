@@ -1,5 +1,4 @@
-﻿
-namespace AdventOfCode2022.Puzzles;
+﻿namespace AdventOfCode2022.Puzzles;
 
 public class Day01 : IDay
 {

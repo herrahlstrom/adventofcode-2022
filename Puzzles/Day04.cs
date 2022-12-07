@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿namespace AdventOfCode2022.Puzzles;
 
-namespace AdventOfCode2022.Puzzles;
 internal class Day04 : IDay
 {
     public int Day => 4;
