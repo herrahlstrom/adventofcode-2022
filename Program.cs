@@ -2,7 +2,13 @@
 using ConsoleTables;
 using System.Diagnostics;
 
-var resultTable = new ConsoleTable("PUZZLE", "FIRST", "SECOND", "ELAPSED");
+var resultTable = new ConsoleTable("PUZZLE", "FIRST", "SECOND", "ELAPSED")
+{
+    Options =
+    {
+        EnableCount = false
+    }
+};
 
 foreach (IDay day in GetPuzzles(args.FirstOrDefault()))
 {
