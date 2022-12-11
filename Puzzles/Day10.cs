@@ -47,6 +47,7 @@ internal class Day10 : IDay
         int cycle = 0;
         int x = 1;
 
+        Console.WriteLine("");
         Console.WriteLine("- Output from {0} {1} -", Day, Name);
 
         foreach (var line in File.ReadLines($"input/{Day:00}.txt"))
@@ -63,6 +64,8 @@ internal class Day10 : IDay
                 x += int.Parse(line[5..]);
             }
         }
+        
+        Console.WriteLine("");
 
         void IncCycles()
         {

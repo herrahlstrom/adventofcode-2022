@@ -13,8 +13,24 @@ var resultTable = new ConsoleTable("PUZZLE", "FIRST", "SECOND", "ELAPSED")
 foreach (IDay day in GetPuzzles(args.FirstOrDefault()))
 {
     Stopwatch sw = Stopwatch.StartNew();
-    object firstResult = day.FirstPart();
-    object secondResult = day.SecondPart();
+
+    object firstResult;
+    try
+    {
+        firstResult = day.FirstPart();
+    }
+    catch (NotImplementedException)
+    { firstResult = ""; }
+
+    object secondResult;
+    try
+    {
+        secondResult = day.SecondPart();
+    }
+    catch (NotImplementedException)
+    { secondResult = ""; }
+
+
     sw.Stop();
 
     resultTable.AddRow(
