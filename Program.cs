@@ -19,8 +19,8 @@ foreach (IDay day in GetPuzzles(args.FirstOrDefault()))
 
     resultTable.AddRow(
         $"{day.Day,2} {day.Name}",
-        $"{firstResult,10}",
-        $"{secondResult,10}",
+        $"{firstResult,11}",
+        $"{secondResult,11}",
         $"{sw.ElapsedMilliseconds,4} ms");
 }
 
