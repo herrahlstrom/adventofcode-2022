@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace AdventOfCode2022.Puzzles
 {
     internal class Day12 : IDay
     {
+
+        delegate bool CanMove(char[,] map, Point point, Point target);
+
         public int Day => 12;
 
         public string Name => "Hill Climbing Algorithm";
@@ -12,55 +16,7 @@ namespace AdventOfCode2022.Puzzles
         public object FirstPart()
         {
             char[,] map = ReadMap(out Point start, out Point target);
-            return GetPath(start, target, map).Length;
-        }
 
-        public object SecondPart()
-        {
-         /* A better solution would be to start from end position and calculate all distances,
-          * then just take the lowest number from any 'a'. But this solution is fast enought,
-          * and I don'w feel to rewrite. for now at least...
-          */
-
-            char[,] map = ReadMap(out Point start, out Point target);
-            var bestLength = GetPath(start, target, map).Length;
-
-            for (int x = 0; x < map.GetLength(0); x++)
-            {
-                for (int y = 0; y < map.GetLength(1); y++)
-                {
-                    if (map[x, y] == 'a')
-                    {
-                        var length = GetPath(new Point(x, y), target, map, bestLength).Length;
-                        if (length > 0 && length < bestLength)
-                        {
-                            bestLength = length;
-                        }
-                    }
-                }
-            }
-
-            return bestLength;
-        }
-
-        private static bool CanMove(char[,] map, Point point, Point target)
-        {
-            var inMap = target.X >= 0 &&
-               target.X < map.GetLength(0) &&
-               target.Y >= 0 &&
-               target.Y < map.GetLength(1);
-            if (!inMap) { return false; }
-
-            var a = map[point.X, point.Y];
-            if (a == 'S') { a = 'a'; }
-            var b = map[target.X, target.Y];
-            if (b == 'E') { b = 'z'; }
-
-            return a >= b - 1;
-        }
-
-        private static Point[] GetPath(Point start, Point target, char[,] map, int maxStep = int.MaxValue)
-        {
             Point[,][] trail = new Point[map.GetLength(0), map.GetLength(1)][];
             trail[start.X, start.Y] = Array.Empty<Point>();
             var queue = new Queue<Point>();
@@ -72,45 +28,111 @@ namespace AdventOfCode2022.Puzzles
             {
                 if (current == target)
                 {
-                    return trail[target.X, target.Y];
+                    return trail[target.X, target.Y].Length;
                 }
 
                 foreach (var dir in directions)
                 {
-                    if (dir.Invoke(map, current, out Point next) && (trail[next.X, next.Y] is null))
+                    if (dir.Invoke(map, current, out Point next, CanMoveForward) && (trail[next.X, next.Y] is null))
                     {
-                        Point[] nextTrail = trail[current.X, current.Y].Append(next).ToArray();
-                        if (nextTrail.Length >= maxStep)
-                        {
-                            continue;
-                        }
-                        trail[next.X, next.Y] = nextTrail;
+                        trail[next.X, next.Y] = trail[current.X, current.Y].Append(next).ToArray();
                         queue.Enqueue(next);
                     }
                 }
             }
 
-            return Array.Empty<Point>();
+            throw new UnreachableException();
         }
-        private static bool TryGoDown(char[,] map, Point point, out Point below)
+
+        public object SecondPart()
+        {
+            char[,] map = ReadMap(out _, out Point target);
+
+            Point[,][] trail = new Point[map.GetLength(0), map.GetLength(1)][];
+            trail[target.X, target.Y] = Array.Empty<Point>();
+            var queue = new Queue<Point>();
+            queue.Enqueue(target);
+
+            var directions = new[] { TryGoRight, TryGoDown, TryGoLeft, TryGoUp };
+
+            // Start from end and get length to all reachable positions
+            while (queue.TryDequeue(out Point? p) && p is { } current)
+            {
+                foreach (var dir in directions)
+                {
+                    if (dir.Invoke(map, current, out Point next, CanMoveBackward) && (trail[next.X, next.Y] is null))
+                    {
+                        trail[next.X, next.Y] = trail[current.X, current.Y].Append(next).ToArray();
+                        queue.Enqueue(next);
+                    }
+                }
+            }
+
+            int bestPathLength = int.MaxValue;
+            for (int x = 0; x < map.GetLength(0); x++)
+            {
+                for (int y = 0; y < map.GetLength(1); y++)
+                {
+                    if (map[x, y] == 'a')
+                    {
+                        if (trail[x, y] is not Point[] path)
+                        {
+                            continue;
+                        }
+                        var pathLength = path.Length;
+                        if (pathLength < bestPathLength)
+                        {
+                            bestPathLength = pathLength;
+                        }
+                    }
+                }
+            }
+            return bestPathLength;
+        }
+
+        private static bool CanMoveBackward(char[,] map, Point current, Point next)
+        {
+            return CanMoveForward(map, next, current);
+        }
+
+        private static bool CanMoveForward(char[,] map, Point current, Point next)
+        {
+            var a = map[current.X, current.Y];
+            if (a == 'S') { a = 'a'; }
+            var b = map[next.X, next.Y];
+            if (b == 'E') { b = 'z'; }
+
+            return a >= b - 1;
+        }
+
+        private static bool InMap(char[,] map, Point target)
+        {
+            return
+                target.X >= 0 &&
+                target.X < map.GetLength(0) &&
+                target.Y >= 0 &&
+                target.Y < map.GetLength(1);
+        }
+
+        private static bool TryGoDown(char[,] map, Point point, out Point below, CanMove canMoveDelegate)
         {
             below = point with { Y = point.Y + 1 };
-            return CanMove(map, point, below);
+            return InMap(map, below) && canMoveDelegate.Invoke(map, point, below);
         }
-        private static bool TryGoLeft(char[,] map, Point point, out Point left)
+        private static bool TryGoLeft(char[,] map, Point point, out Point left, CanMove canMoveDelegate)
         {
             left = point with { X = point.X - 1 };
-            return CanMove(map, point, left);
+            return InMap(map, left) && canMoveDelegate.Invoke(map, point, left);
         }
-        private static bool TryGoRight(char[,] map, Point point, out Point right)
+        private static bool TryGoRight(char[,] map, Point point, out Point right, CanMove canMoveDelegate)
         {
             right = point with { X = point.X + 1 };
-            return CanMove(map, point, right);
+            return InMap(map, right) && canMoveDelegate.Invoke(map, point, right);
         }
-        private static bool TryGoUp(char[,] map, Point point, out Point above)
+        private static bool TryGoUp(char[,] map, Point point, out Point above, CanMove canMoveDelegate)
         {
             above = point with { Y = point.Y - 1 };
-            return CanMove(map, point, above);
+            return InMap(map, above) && canMoveDelegate.Invoke(map, point, above);
         }
         private char[,] ReadMap(out Point start, out Point target)
         {
